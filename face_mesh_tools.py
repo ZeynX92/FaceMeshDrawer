@@ -22,19 +22,20 @@ class FaceMeshProcessor:
     @staticmethod
     def draw_landmarks_on_image(rgb_img, detection_result, connections_thickness=1, contours_thickness=3,
                                 circle_radius=1, landmark_color=(0, 255, 0), connection_color=(0, 255, 0),
-                                contours_color=(255, 255, 0), draw_contours=False):
+                                contours_color=(255, 255, 0), draw_contours=False, draw_landmarks=True):
         """Функция возвращающая RGB изображению и результатам детекции RGB изображение с ключевыми точками"""
         face_landmarks_list = detection_result.face_landmarks
 
         for idx in range(len(face_landmarks_list)):
             face_landmarks = face_landmarks_list[idx]
 
-            drawing_utils.draw_landmarks(
-                image=rgb_img,
-                landmark_list=face_landmarks,
-                connections=vision.FaceLandmarksConnections.FACE_LANDMARKS_TESSELATION,
-                landmark_drawing_spec=DrawingSpec(color=landmark_color, circle_radius=circle_radius),
-                connection_drawing_spec=DrawingSpec(color=connection_color, thickness=connections_thickness))
+            if draw_landmarks:
+                drawing_utils.draw_landmarks(
+                    image=rgb_img,
+                    landmark_list=face_landmarks,
+                    connections=vision.FaceLandmarksConnections.FACE_LANDMARKS_TESSELATION,
+                    landmark_drawing_spec=DrawingSpec(color=landmark_color, circle_radius=circle_radius),
+                    connection_drawing_spec=DrawingSpec(color=connection_color, thickness=connections_thickness))
 
             if draw_contours:
                 drawing_utils.draw_landmarks(
@@ -68,4 +69,4 @@ class FaceMeshProcessor:
 
 if __name__ == '__main__':
     processor = FaceMeshProcessor('models/face_landmarker.task', debug=True)
-    processor.process_image('imgs/1.png', draw_contours=True)
+    processor.process_image('imgs/1.png', draw_landmarks=False, draw_contours=True)

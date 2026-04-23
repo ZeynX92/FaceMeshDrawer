@@ -2,6 +2,7 @@ import cv2
 from PyQt6.QtCore import Qt
 from PyQt6 import uic, QtGui
 from PyQt6.QtGui import QPixmap
+from setings_form import EditSettingsForm
 from face_mesh_tools import FaceMeshProcessor, FaceNotFoundError
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
@@ -9,14 +10,26 @@ from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 class FaceMeshForm(QMainWindow):
     def __init__(self):
         super().__init__()
+        uic.loadUi('ui/main.ui', self)
 
         self.cur_img = None
-        uic.loadUi('ui/main.ui', self)
+        self.processor = FaceMeshProcessor('models/face_landmarker.task')
+
+        self.edit_settings_form = None
+        self.settings = {"connections_thickness": 1, "contours_thickness": 3,
+                        "circle_radius": 1, "landmark_color": (0, 255, 0), "connection_color": (0, 255, 0),
+                        "contours_color": (255, 255, 0), "draw_contours": False, "draw_landmarks": True}
 
         self.load_button.clicked.connect(self.process)
         self.save_button.clicked.connect(self.save)
+        self.settings_button.clicked.connect(self.edit_settings)
 
-        self.processor = FaceMeshProcessor('models/face_landmarker.task')
+    def edit_settings(self):
+        self.edit_settings_form = EditSettingsForm(self)
+        self.edit_settings_form.show()
+        self.setEnabled(False)
+
+
 
     def process(self):
         cur_img_path = QFileDialog.getOpenFileName(self, "Выберите изображение", '/home', "Фотографии *.png *.jpg")[0]
@@ -26,7 +39,7 @@ class FaceMeshForm(QMainWindow):
             return
 
         try:
-            self.cur_img = self.processor.process_image(cur_img_path)
+            self.cur_img = self.processor.process_image(cur_img_path, **self.settings)
         except FaceNotFoundError:
             msg = QMessageBox(self)
             msg.setIcon(QMessageBox.Icon.Critical)
