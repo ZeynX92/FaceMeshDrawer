@@ -11,14 +11,18 @@ class FaceMeshForm(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/main.ui', self)
+        # pixmap = QPixmap('imgs/default2.jpg')
+        # pixmap = pixmap.scaled(self.label.size(), Qt.AspectRatioMode.KeepAspectRatio,
+        #                        Qt.TransformationMode.SmoothTransformation)
+        # self.label.setPixmap(pixmap)
 
         self.cur_img = None
         self.processor = FaceMeshProcessor('models/face_landmarker.task')
 
         self.edit_settings_form = None
         self.settings = {"connections_thickness": 1, "contours_thickness": 3,
-                        "circle_radius": 1, "landmark_color": (0, 255, 0), "connection_color": (0, 255, 0),
-                        "contours_color": (255, 255, 0), "draw_contours": False, "draw_landmarks": True}
+                         "circle_radius": 1, "landmark_color": (0, 255, 0), "connection_color": (0, 255, 0),
+                         "contours_color": (255, 255, 0), "draw_contours": False, "draw_landmarks": True}
 
         self.load_button.clicked.connect(self.process)
         self.save_button.clicked.connect(self.save)
@@ -28,8 +32,6 @@ class FaceMeshForm(QMainWindow):
         self.edit_settings_form = EditSettingsForm(self)
         self.edit_settings_form.show()
         self.setEnabled(False)
-
-
 
     def process(self):
         cur_img_path = QFileDialog.getOpenFileName(self, "Выберите изображение", '/home', "Фотографии *.png *.jpg")[0]
@@ -49,11 +51,13 @@ class FaceMeshForm(QMainWindow):
             return
 
         height, width, channels = self.cur_img.shape
+        print(height, width)
         bytes_per_line = channels * width
         qt_img = QtGui.QImage(self.cur_img.data, width, height, bytes_per_line,
-                              QtGui.QImage.Format.Format_RGB888).scaled(height, width,
-                                                                        Qt.AspectRatioMode.KeepAspectRatio)
-        self.label.setPixmap(QPixmap.fromImage(qt_img))
+                              QtGui.QImage.Format.Format_RGB888)
+        pixmap_img = QPixmap.fromImage(qt_img).scaled(self.label.size(), Qt.AspectRatioMode.KeepAspectRatio,
+                                                      Qt.TransformationMode.SmoothTransformation)
+        self.label.setPixmap(pixmap_img)
 
     def save(self):
         if self.cur_img is not None:
