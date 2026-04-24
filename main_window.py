@@ -11,12 +11,9 @@ class FaceMeshForm(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/main.ui', self)
-        # pixmap = QPixmap('imgs/default2.jpg')
-        # pixmap = pixmap.scaled(self.label.size(), Qt.AspectRatioMode.KeepAspectRatio,
-        #                        Qt.TransformationMode.SmoothTransformation)
-        # self.label.setPixmap(pixmap)
 
         self.cur_img = None
+        self.cur_pixmap = None
         self.processor = FaceMeshProcessor('models/face_landmarker.task')
 
         self.edit_settings_form = None
@@ -27,6 +24,20 @@ class FaceMeshForm(QMainWindow):
         self.load_button.clicked.connect(self.process)
         self.save_button.clicked.connect(self.save)
         self.settings_button.clicked.connect(self.edit_settings)
+
+        self.show()
+        self.cur_pixmap = QPixmap('imgs/default2.jpg').scaled(self.label.size(), Qt.AspectRatioMode.KeepAspectRatio,
+                                                              Qt.TransformationMode.SmoothTransformation)
+        self.label.setPixmap(self.cur_pixmap)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if self.cur_pixmap is None:
+            return
+
+        scaled = self.cur_pixmap.scaled(self.label.size(), Qt.AspectRatioMode.KeepAspectRatio,
+                                        Qt.TransformationMode.SmoothTransformation)
+        self.label.setPixmap(scaled)
 
     def edit_settings(self):
         self.edit_settings_form = EditSettingsForm(self)
@@ -58,6 +69,7 @@ class FaceMeshForm(QMainWindow):
         pixmap_img = QPixmap.fromImage(qt_img).scaled(self.label.size(), Qt.AspectRatioMode.KeepAspectRatio,
                                                       Qt.TransformationMode.SmoothTransformation)
         self.label.setPixmap(pixmap_img)
+        self.cur_pixmap = pixmap_img
 
     def save(self):
         if self.cur_img is not None:
