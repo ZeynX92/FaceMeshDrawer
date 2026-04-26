@@ -2,7 +2,7 @@ import cv2
 from PyQt6.QtCore import Qt
 from PyQt6 import uic, QtGui
 from PyQt6.QtGui import QPixmap
-from setings_form import EditSettingsForm
+from settings_form import EditSettingsForm
 from face_mesh_tools import FaceMeshProcessor, FaceNotFoundError
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
