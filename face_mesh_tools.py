@@ -50,6 +50,9 @@ class FaceMeshProcessor:
         """По пути картинки возвращает ее версию с отрисованными результатами детекции (BGR)"""
         img = cv2.imread(img_path)
 
+        if img is None:
+            raise ValueError(f"Файл по пути {img_path} не является корректным изображением или поврежден.")
+
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=img_rgb)
         results = self.detector.detect(mp_image)

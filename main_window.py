@@ -28,6 +28,7 @@ class FaceMeshForm(QMainWindow):
         self.show()
         self.cur_pixmap = QPixmap('imgs/default2.jpg').scaled(self.label.size(), Qt.AspectRatioMode.KeepAspectRatio,
                                                               Qt.TransformationMode.SmoothTransformation)
+
         self.label.setPixmap(self.cur_pixmap)
 
     def resizeEvent(self, event):
@@ -57,6 +58,13 @@ class FaceMeshForm(QMainWindow):
             msg = QMessageBox(self)
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.setText("На фотографии не обнаружено лиц")
+            msg.setWindowTitle("Ошибка распознавания!")
+            msg.exec()
+            return
+        except ValueError:
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Critical)
+            msg.setText("Файл не является корректным изображением или поврежден")
             msg.setWindowTitle("Ошибка распознавания!")
             msg.exec()
             return
