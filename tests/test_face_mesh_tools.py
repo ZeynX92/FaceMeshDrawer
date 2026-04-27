@@ -1,10 +1,9 @@
-import pytest
-import cv2
-import numpy as np
 import os
+import cv2
+import pytest
+import numpy as np
 from unittest.mock import MagicMock, patch
 from face_mesh_tools import FaceMeshProcessor, FaceNotFoundError
-
 
 BASE_DIRECTION = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(BASE_DIRECTION, 'models', 'face_landmarker.task')
@@ -12,6 +11,9 @@ REAL_IMAGE_PATH = os.path.join(BASE_DIRECTION, 'imgs', '1.png')
 
 
 class TestFaceMeshProcessor:
+    def __init__(self):
+        pass
+
     @pytest.fixture
     def mock_processor(self):
         """Фикстура с моком для быстрой проверки логики"""
@@ -58,7 +60,6 @@ class TestFaceMeshProcessor:
         result = processor.process_image(REAL_IMAGE_PATH)
         assert isinstance(result, np.ndarray)
         assert result.size > 0
-
 
     def test_process_invalid_file_format(self, mock_processor, tmp_path):
         """Тест: передача не изображения"""
