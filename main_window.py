@@ -2,7 +2,7 @@ import cv2
 from PyQt6.QtCore import Qt
 from PyQt6 import uic, QtGui
 from PyQt6.QtGui import QPixmap
-from setings_form import EditSettingsForm
+from settings_form import EditSettingsForm
 from face_mesh_tools import FaceMeshProcessor, FaceNotFoundError
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 
@@ -28,6 +28,7 @@ class FaceMeshForm(QMainWindow):
         self.show()
         self.cur_pixmap = QPixmap('imgs/default2.jpg').scaled(self.label.size(), Qt.AspectRatioMode.KeepAspectRatio,
                                                               Qt.TransformationMode.SmoothTransformation)
+
         self.label.setPixmap(self.cur_pixmap)
 
     def resizeEvent(self, event):
@@ -57,6 +58,13 @@ class FaceMeshForm(QMainWindow):
             msg = QMessageBox(self)
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.setText("На фотографии не обнаружено лиц")
+            msg.setWindowTitle("Ошибка распознавания!")
+            msg.exec()
+            return
+        except ValueError:
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Critical)
+            msg.setText("Файл не является корректным изображением или поврежден")
             msg.setWindowTitle("Ошибка распознавания!")
             msg.exec()
             return
