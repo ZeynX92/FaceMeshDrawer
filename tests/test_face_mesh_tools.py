@@ -11,9 +11,6 @@ REAL_IMAGE_PATH = os.path.join(BASE_DIRECTION, 'imgs', '1.png')
 
 
 class TestFaceMeshProcessor:
-    def __init__(self):
-        pass
-
     @pytest.fixture
     def mock_processor(self):
         """Фикстура с моком для быстрой проверки логики"""
