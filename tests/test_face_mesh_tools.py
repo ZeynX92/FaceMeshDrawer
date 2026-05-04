@@ -1,11 +1,13 @@
 import os
 import cv2
 import pytest
+import sys
 import numpy as np
 from unittest.mock import MagicMock, patch
-from face_mesh_tools import FaceMeshProcessor, FaceNotFoundError
 
 BASE_DIRECTION = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0,BASE_DIRECTION)
+from face_mesh_tools import FaceMeshProcessor, FaceNotFoundError
 MODEL_PATH = os.path.join(BASE_DIRECTION, 'models', 'face_landmarker.task')
 REAL_IMAGE_PATH = os.path.join(BASE_DIRECTION, 'imgs', '1.png')
 
